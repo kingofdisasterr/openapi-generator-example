@@ -1,0 +1,66 @@
+openapi: 3.0.3
+info:
+  title: Some dummy interface
+  version: 1.0.0
+servers:
+  - description: Some server
+    url: http://localhost:8080/someinterface/v1
+tags:
+  - name: SomeOperation
+    description: Some description
+paths:
+  /v1/some/operation:
+    get:
+      operationId: GetSomeData
+      responses:
+        '200':
+          description: Request OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+  /v1/some/otherOperation:
+    get:
+      operationId: GetSomeOtherData
+      responses:
+        '200':
+          description: Request OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailingMessage'
+components:
+  schemas:
+    Message:
+      type: object
+      description: working example with enclosed property including 'allOf'
+      properties:
+        data:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/SomeUnimportantData'
+            - properties:
+                someProperty:
+                  type: string
+                data:
+                  type: object
+                  description: arbitrary object
+                  example:
+                    someMeaningfulNumber: 25009779801
+    FailingMessage:
+      type: object
+      description: failing example with direct usage of 'allOf'
+      allOf:
+        - $ref: '#/components/schemas/SomeUnimportantData'
+        - properties:
+            someProperty:
+              type: string
+            data:
+              type: object
+              description: arbitrary object
+              example:
+                someMeaningfulNumber: 25009779801
+    SomeUnimportantData:
+      properties:
+        data:
+          type: string
